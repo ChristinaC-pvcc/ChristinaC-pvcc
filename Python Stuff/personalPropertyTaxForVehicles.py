@@ -27,9 +27,18 @@ total = 0
     ### Functions/Methods ###
 
 def main():
-    get_userinput()
-    perform_calculations()
-    print_bill()
+    is_entering = "Y"
+    
+    while is_entering.upper() != "N":
+        is_entering = input("\nEnter a vehicle for tax?\nType Yes(Y) or No(N): ")
+        if is_entering.upper() != "Y" and is_entering.upper() != "N":
+            error("lower or upper case 'y' or 'n'.")
+
+        if is_entering.upper() == "Y":
+            reset()
+            get_userinput()
+            perform_calculations()
+            print_bill()
 
 def format_it(number):
     moneyfrmt = '10,.2f'
@@ -44,13 +53,31 @@ def error(error_type):
     print("ERROR: This input has to be a " + str(error_type))
     print(line+"\n")
 
+def reset():
+    global assesed_value, is_eligible, anual_tax_amnt, sub_total, relief_amnt, total
+    assesed_value = "null"
+    is_eligible = "null"
+
+    anual_tax_amnt = 0
+
+    sub_total = 0
+    relief_amnt = 0
+    total = 0
+
 def get_userinput():
     global line, assesed_value, is_eligible
+
+    is_float = False
     
-    while assesed_value.isnumeric() == False:
-        assesed_value = input("Input the assessed value of the vehicle.\nEnter Amount: ")
-        if assesed_value.isnumeric() == False:
-            error("number and also positive.")
+    while is_float == False:
+        assesed_value = input("\nInput the assessed value of the vehicle.\nEnter Amount: ")
+
+        # vvv check if assesed_value is a float
+        if assesed_value.replace(".", "").isnumeric():
+            is_float = True
+        else:
+            is_float = False
+            error("number greater or equal to zero.")
     print()
             
     while is_eligible.upper() != "Y" and is_eligible.upper() != "N":
@@ -65,12 +92,14 @@ def perform_calculations():
     global line, assesed_value, sub_total, relief_amnt, total
     anual_tax_amnt = float(assesed_value) * PP_TAX_RATE
     sub_total = anual_tax_amnt * PAID_TIME
+    
     if is_eligible.upper() == "Y":
         relief_amnt = sub_total * TAX_RELIEF
+        
     total = sub_total - relief_amnt
 
 def print_bill():
-    print("\n"+line+"\n"+line)
+    print("\n"+line+"\n\tTAX BILL\n"+line)
     print("Assesed Value:\t $" + format_it(assesed_value))
     print("Full Tax Amount: $" + format_it(sub_total))
     print("Relief:\t\t $" + format_it(relief_amnt))
