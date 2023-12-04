@@ -55,7 +55,7 @@ def main():
             print('\n** Open this file in a browser window to see your results: ' + outfile)
             f.write('</body></html>')
             f.close()
-            webbrowser.open_new_tab(outfile)
+            #webbrowser.open_new_tab(outfile)
 
 def get_user_data():
     global inout, numcredits, scholarshipamt
